@@ -1,0 +1,63 @@
+; Windows USB CDC setup file for USBUART User Module
+; (c) Copyright 2013 Cypress Semiconductor Corporation
+
+[Version]
+Signature="$Windows NT$"
+Class=Ports
+ClassGuid={4D36E978-E325-11CE-BFC1-08002BE10318}
+Provider=%PROVIDER%
+CatalogFile=KitProgUart.cat
+;;;LayoutFile=layout.inf
+DriverVer=07/19/2009,2.0.0000.0
+;;;DriverPackageDisplayName=%DESCRIPTION%
+
+[Manufacturer]
+%MFGNAME%=DeviceList, NT$ARCH$
+
+[DestinationDirs]
+DefaultDestDir=12
+
+[SourceDisksFiles]
+
+[SourceDisksNames]
+
+[DeviceList.NT$ARCH$]
+%DESCRIPTION%=DriverInstall, USB\VID_04b4&PID_f139&MI_02
+
+;------------------------------------------------------------------------------
+;  64 bit section for arm64 based systems
+;------------------------------------------------------------------------------
+
+[DriverInstall.NT$ARCH$]
+include=mdmcpq.inf
+;;;;CopyFiles=DriverCopyFiles
+CopyFiles=FakeModemCopyFileSection
+AddReg=DriverInstall.AddReg
+
+[DriverInstall.AddReg]
+HKR,,EnumPropPages32,,"MsPorts.dll,SerialPortPropPageProvider"
+
+[DriverInstall.NT$ARCH$.Services]
+AddService=usbser, 0x00000002, DriverService
+
+;------------------------------------------------------------------------------
+;
+;------------------------------------------------------------------------------
+[FakeModemCopyFileSection]
+
+[DriverService]
+DisplayName=%SERVICE%
+ServiceType=1
+StartType=3
+ErrorControl=1
+ServiceBinary=%12%\usbser.sys
+
+;------------------------------------------------------------------------------
+;  String Definitions
+;------------------------------------------------------------------------------
+
+[Strings]
+PROVIDER="Cypress"
+MFGNAME="Cypress"
+DESCRIPTION="KitProg USB-UART"
+SERVICE="USB RS-232"
